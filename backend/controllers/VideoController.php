@@ -9,7 +9,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
 use Yii;
-
+use yii\filters\AccessControl;
 /**
  * VideoController implements the CRUD actions for Video model.
  */
@@ -22,7 +22,15 @@ class VideoController extends Controller
     {
         return array_merge(
             parent::behaviors(),
-            [
+            [ 'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -41,17 +49,7 @@ class VideoController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Video::find(),
-            /*
-            'pagination' => [
-                'pageSize' => 50
-            ],
-            'sort' => [
-                'defaultOrder' => [
-                    'video_id' => SORT_DESC,
-                ]
-            ],
-            */
+            'query' => Video::find()->where(['created_by' => Yii::$app->user->id])->orderBy(['created_at' => SORT_DESC]),
         ]);
 
         return $this->render('index', [
@@ -80,6 +78,7 @@ class VideoController extends Controller
     public function actionCreate()
     {
         $model = new Video();
+        $model->scenario = 'insert';
 
         if (Yii::$app->request->isPost) {
             if ($model->load(Yii::$app->request->post())) {
@@ -108,8 +107,8 @@ class VideoController extends Controller
     public function actionUpdate($video_id)
     {
         $model = $this->findModel($video_id);
+        $model->scenario = 'update';
 
-    
         $model->thumbnail = UploadedFile::getInstance($model, 'thumbnail');
 
         if ($this->request->isPost && $model->load($this->request->post())) {

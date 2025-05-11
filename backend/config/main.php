@@ -45,6 +45,9 @@ return [
                 'video/update/<video_id:[\w-]+>' => 'video/update',
             ],
         ],
+        'imagine' => [
+            'class' => 'yii\imagine\Image',
+        ],
         'assetManager' => [
             'appendTimestamp' => true,
         ]

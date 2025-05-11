@@ -26,19 +26,37 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'video_id',
-            'title',
-            'description:ntext',
-            'tags',
-            'has_thumbnail',
-            //'video_name',
-            //'updated_at',
-            //'created_by',
             [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Video $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'video_id' => $model->video_id]);
-                 }
+                'attribute' => 'title',
+                "content" => function($model){
+                return $this->render('_video_item' , ['model' => $model]);
+                },
+            ],
+            ['attribute' => 'status',
+            'content' => function($model){
+            return $model->getStatusLabel();
+            },
+            ],
+            'created_at:datetime',
+            'updated_at:datetime',
+            [
+                'class' => ActionColumn::class,
+                'template' => '{delete}',
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    if ($action === 'delete') {
+                        return ['delete', 'video_id' => $model->video_id];
+                    }
+                    return [$action, 'video_id' => $model->video_id];
+                },
+                'buttons' => [
+                    'delete' => function ($url, $model, $key) {
+                        return Html::a('Delete', $url, [
+                            'data-method' => 'post',
+                            'data-confirm' => 'Are you sure you want to delete this video?',
+                            'class' => 'text-primary'
+                        ]);
+                    },
+                ],
             ],
         ],
     ]); ?>

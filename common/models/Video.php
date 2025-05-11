@@ -51,7 +51,7 @@ const STATUS_PUBLISHED = 1;
         return [
             [
                 'class' => TimestampBehavior::class,
-                'createdAtAttribute' => false,
+                'createdAtAttribute' => 'created_at',
                 'updatedAtAttribute' => 'updated_at',
             ],
             [
@@ -77,7 +77,26 @@ const STATUS_PUBLISHED = 1;
             [['has_thumbnail'], 'default', 'value' => 0],
             [['status'], 'default', 'value' => self::STATUS_UNLISTED],
             [['thumbnail'], 'image', 'minWidth' => 1280],
-            [['video'], 'file','extensions' => 'mp4'],
+            [
+                ['video'],
+                'file',
+                'extensions' => 'mp4',
+                'skipOnEmpty' => false,
+                'maxSize' => 2147483648, // 2GB
+                'tooBig' => 'The file is too large. Maximum allowed size is 2GB.',
+                'message' => 'Please upload a video file (mp4). If you selected a file and see this error, it may be too large for the server to handle.',
+                'on' => 'insert'
+            ],
+            [
+                ['video'],
+                'file',
+                'extensions' => 'mp4',
+                'skipOnEmpty' => true,
+                'maxSize' => 2147483648, // 2GB
+                'tooBig' => 'The file is too large. Maximum allowed size is 2GB.',
+                'message' => 'Please upload a video file (mp4). If you selected a file and see this error, it may be too large for the server to handle.',
+                'on' => 'update'
+            ],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
         ];
     }
@@ -154,7 +173,7 @@ const STATUS_PUBLISHED = 1;
             parent::save(false, ['has_thumbnail']);
             $this->thumbnail->saveAs($thumbnailPath);
             // resize with yii2 imagine
-            Image::getImagine()->open($thumbnailPath)->thumbnail(new Box(1280, 1280))->save($thumbnailPath);
+            \yii\imagine\Image::getImagine()->open($thumbnailPath)->thumbnail(new \Imagine\Image\Box(1280, 1280))->save($thumbnailPath);
         }
         return true;
     }
@@ -165,4 +184,25 @@ const STATUS_PUBLISHED = 1;
         return $this->has_thumbnail ? Yii::$app->params['frontendUrl'].'/storage/thumbs/'.$this->video_id .'.png' : '';
     }
 
+    public function getStatusLabel()
+    {
+        $map = [
+            self::STATUS_UNLISTED => 'Unlisted',
+            self::STATUS_PUBLISHED => 'Published',
+        ];
+        return $map[$this->status] ?? 'Unknown';
+    }
+
+    public function beforeDelete()
+    {
+        $videoPath = Yii::getAlias('@frontend/web/storage/videos/') . $this->video_id . '.mp4';
+        $thumbPath = Yii::getAlias('@frontend/web/storage/thumbs/') . $this->video_id . '.png';
+        if (file_exists($videoPath)) {
+            @unlink($videoPath);
+        }
+        if ($this->has_thumbnail && file_exists($thumbPath)) {
+            @unlink($thumbPath);
+        }
+        return parent::beforeDelete();
+    }
 }

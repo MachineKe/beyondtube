@@ -3,10 +3,12 @@
 use yii\helpers\Html;
 use yii\bootstrap5\ActiveForm;
 use common\models\Video;
-
+use backend\web\assets\TagsInputAsset;
 /** @var yii\web\View $this */
 /** @var common\models\Video $model */
 /** @var yii\bootstrap5\ActiveForm $form */
+// register tagsinput asset
+TagsInputAsset::register($this);
 ?>
 
 <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
@@ -18,7 +20,13 @@ use common\models\Video;
             <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
             <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
             <?= $form->field($model, 'thumbnail')->fileInput(['class' => 'form-control']) ?>
-            <?= $form->field($model, 'tags')->textInput(['maxlength' => true]) ?>
+            <?php if ($model->has_thumbnail && $model->getThumbnailLink()): ?>
+                <div class="mb-2">
+                    <div class="text-muted">Current Thumbnail:</div>
+                    <img src="<?= $model->getThumbnailLink() ?>" alt="Current Thumbnail" class="img-fluid" style="max-width: 200px; height: auto; border: 1px solid #ccc;"/>
+                </div>
+            <?php endif; ?>
+            <?= $form->field($model, 'tags',['inputOptions' => ['data-role' => 'tagsinput']])->textInput(['maxlength' => true]) ?>
 
             <div class="form-group mt-3">
                 <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

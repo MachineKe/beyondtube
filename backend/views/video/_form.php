@@ -9,12 +9,15 @@ use common\models\Video;
 /** @var yii\bootstrap5\ActiveForm $form */
 ?>
 
-<?php $form = ActiveForm::begin(); ?>
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 <div class="video-form">
     <div class="row">
         <div class="col-md-8">
+            <!-- error summary -->
+            <?= $form->errorSummary($model); ?>
             <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
             <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+            <?= $form->field($model, 'thumbnail')->fileInput(['class' => 'form-control']) ?>
             <?= $form->field($model, 'tags')->textInput(['maxlength' => true]) ?>
 
             <div class="form-group mt-3">
@@ -24,10 +27,10 @@ use common\models\Video;
         <div class="col-md-4">
             <?php if ($model->video_name): ?>
                 <div class="mb-2">
-                    <video class="img-fluid" style="max-width:100%;height:auto;" controls>
-                        <source src="<?= $model->getVideoLink() ?>" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
+<video class="img-fluid" style="max-width:100%;height:auto;" controls poster="<?= $model->getThumbnailLink() ?>">
+    <source src="<?= $model->getVideoLink() ?>" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
                 </div>
             <?php endif; ?>
             <div>

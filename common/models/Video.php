@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use Imagine\Gd\Image;
 use Yii;
 use yii\helpers\FileHelper;
 use yii\behaviors\TimestampBehavior;
@@ -32,6 +33,9 @@ const STATUS_PUBLISHED = 1;
     //**
     // @var \yii\web\UploadedFile */
     public $video;
+    //**
+    // @var \yii\web\UploadedFile */
+    public $thumbnail;
 
 
     /**
@@ -72,6 +76,8 @@ const STATUS_PUBLISHED = 1;
             [['video_id'], 'unique'],
             [['has_thumbnail'], 'default', 'value' => 0],
             [['status'], 'default', 'value' => self::STATUS_UNLISTED],
+            [['thumbnail'], 'image', 'minWidth' => 1280],
+            [['video'], 'file','extensions' => 'mp4'],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['created_by' => 'id']],
         ];
     }
@@ -91,6 +97,7 @@ const STATUS_PUBLISHED = 1;
             'status' => 'Status',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
+            'thumbnail' => 'Thumbnail',
         ];
     }
 
@@ -122,6 +129,9 @@ const STATUS_PUBLISHED = 1;
                 $this->title = $this->video->name;
                 $this->video_name = $this->video->name;
             }
+            if ($this->thumbnail !== null) {
+                $this->has_thumbnail = 1;
+            }
         }
         $saved = parent::save($runValidation, $attributeNames);
         if (!$saved) {
@@ -134,10 +144,25 @@ const STATUS_PUBLISHED = 1;
             }
             $this->video->saveAs($videoPath);
         }
+        if ($this->thumbnail !== null) {
+            $thumbnailPath = Yii::getAlias('@frontend/web/storage/thumbs/') . $this->video_id . '.png';
+            if (!is_dir(dirname($thumbnailPath))) {
+                FileHelper::createDirectory(dirname($thumbnailPath));
+            }
+            $this->thumbnail->saveAs($thumbnailPath);
+            $this->has_thumbnail = 1;
+            parent::save(false, ['has_thumbnail']);
+            $this->thumbnail->saveAs($thumbnailPath);
+            // resize with yii2 imagine
+            Image::getImagine()->open($thumbnailPath)->thumbnail(new Box(1280, 1280))->save($thumbnailPath);
+        }
         return true;
     }
     public function getVideoLink(){
         return Yii::$app->params['frontendUrl'].'/storage/videos/'.$this->video_id .'.mp4';
+    }
+    public function getThumbnailLink(){
+        return $this->has_thumbnail ? Yii::$app->params['frontendUrl'].'/storage/thumbs/'.$this->video_id .'.png' : '';
     }
 
 }

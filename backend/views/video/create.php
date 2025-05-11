@@ -27,7 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 <?= $form->field($model, 'video')->fileInput() ?>
-
+<!-- error summary -->
+<?= $form->errorSummary($model); ?>
 <button class="btn btn-primary btn-file" type="submit">
     Upload Video
 </button>

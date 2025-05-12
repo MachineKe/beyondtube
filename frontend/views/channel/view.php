@@ -17,7 +17,7 @@ use yii\helpers\Url;
         <p class="mb-2 text-muted"><?= Html::encode($user->profile->bio ?? '') ?></p>
         <div class="d-flex align-items-center">
             <button id="subscribe-btn"
-                class="btn btn-danger mr-3"
+                class="btn mr-3 <?= Yii::$app->user->isGuest ? 'btn-danger' : (\common\models\Subscriber::find()->where(['channel_id' => $user->id, 'user_id' => Yii::$app->user->id])->exists() ? 'btn-secondary' : 'btn-danger') ?>"
                 data-username="<?= Html::encode($user->username) ?>"
                 data-subscribed="<?= Yii::$app->user->isGuest ? '0' : ( \common\models\Subscriber::find()->where(['channel_id' => $user->id, 'user_id' => Yii::$app->user->id])->exists() ? '1' : '0') ?>"
             >
@@ -41,9 +41,51 @@ $isGuest = Yii::$app->user->isGuest ? '1' : '0';
 document.addEventListener('DOMContentLoaded', function() {
     var btn = document.getElementById('subscribe-btn');
     var countSpan = document.getElementById('subscriber-count');
+    var msgDiv = document.getElementById('subscribe-message');
+    var fadeTimeout = null;
+    var fadeTransitionTimeout = null;
+
+    function fadeOutMessage() {
+        if (fadeTimeout) {
+            clearTimeout(fadeTimeout);
+            fadeTimeout = null;
+        }
+        if (fadeTransitionTimeout) {
+            clearTimeout(fadeTransitionTimeout);
+            fadeTransitionTimeout = null;
+        }
+        msgDiv.classList.remove('fade-out');
+        if (msgDiv.innerHTML.trim() !== '') {
+            fadeTimeout = setTimeout(function() {
+                msgDiv.classList.add('fade-out');
+                fadeTransitionTimeout = setTimeout(function() {
+                    msgDiv.innerHTML = '';
+                    msgDiv.classList.remove('fade-out');
+                }, 1000);
+            }, 3000);
+        }
+    }
+
+    function showMessage(html, isSuccess) {
+        // Clear any previous timeouts
+        if (fadeTimeout) {
+            clearTimeout(fadeTimeout);
+            fadeTimeout = null;
+        }
+        if (fadeTransitionTimeout) {
+            clearTimeout(fadeTransitionTimeout);
+            fadeTransitionTimeout = null;
+        }
+        msgDiv.classList.remove('fade-out');
+        msgDiv.innerHTML = html;
+        fadeOutMessage();
+    }
+
+    // Fade out message on page load if present
+    fadeOutMessage();
+
     btn.addEventListener('click', function(e) {
         var isGuest = <?= $isGuest ?>;
-        var msgDiv = document.getElementById('subscribe-message');
         msgDiv.innerHTML = '';
         if (isGuest) {
             // Redirect guests to login page
@@ -74,14 +116,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.innerHTML = data.subscribed
                     ? 'Unsubscribe <i class="fas fa-bell-slash"></i>'
                     : 'Subscribe <i class="far fa-bell"></i>';
+                // Toggle button color
+                btn.classList.remove('btn-danger', 'btn-secondary');
+                if (data.subscribed) {
+                    btn.classList.add('btn-secondary');
+                } else {
+                    btn.classList.add('btn-danger');
+                }
                 countSpan.innerText = data.count + ' subscriber' + (data.count === 1 ? '' : 's');
-                msgDiv.innerHTML = '<span style="color:green;">' + (data.subscribed ? 'Subscribed successfully.' : 'Unsubscribed successfully.') + '</span>';
+                showMessage('<span style="color:green;">' + (data.subscribed ? 'Subscribed successfully.' : 'Unsubscribed successfully.') + '</span>', true);
             } else {
-                msgDiv.innerHTML = '<span style="color:red;">' + (data.message || 'Subscription failed.') + '</span>';
+                showMessage('<span style="color:red;">' + (data.message || 'Subscription failed.') + '</span>', false);
             }
         })
         .catch(err => {
-            msgDiv.innerHTML = '<span style="color:red;">' + err.message + '</span>';
+            showMessage('<span style="color:red;">' + err.message + '</span>', false);
         })
         .finally(() => {
             btn.disabled = false;
@@ -96,7 +145,8 @@ document.addEventListener('DOMContentLoaded', function() {
     <?= ListView::widget([
         'dataProvider' => $dataProvider,
         'itemView' => function ($model, $key, $index, $widget) {
-            return $this->render('//video/_video_item', ['model' => $model]);
+            // Hide username in channel view
+            return $this->render('//video/_video_item', ['model' => $model, 'showUsername' => false]);
         },
         'emptyText' => 'No videos found for this channel.',
         'layout' => "<div class=\"d-flex flex-wrap\">{items}</div>\n{pager}",

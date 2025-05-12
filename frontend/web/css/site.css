@@ -1,4 +1,18 @@
 html,
+/* Make video card links black and remove underline */
+.card a,
+.card-title a,
+.card-text a {
+    color: #111 !important;
+    text-decoration: none !important;
+}
+.card a:hover,
+.card-title a:hover,
+.card-text a:hover {
+    color: #000 !important;
+    text-decoration: underline;
+}
+
 body {
     height: 100%;
 }
@@ -46,4 +60,14 @@ aside .nav-pills .nav-link.active {
 
 .content-wrapper{
     margin-bottom: 200px;
+}
+
+/* Fade out effect for subscribe message */
+#subscribe-message {
+    opacity: 1;
+    transition: opacity 1s;
+}
+#subscribe-message.fade-out {
+    opacity: 0;
+    transition: opacity 1s;
 }

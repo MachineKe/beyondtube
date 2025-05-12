@@ -19,7 +19,7 @@ use yii\helpers\Url;
                <?php echo $this->render('_buttons', ['model' => $model]) ?>
             </div>
 <div class="text-muted mb-0">
-    <a href="<?= Url::to(['/channel/' . $model->createdBy->username]) ?>">
+    <a href="<?= Url::to(['/channel/' . $model->createdBy->username]) ?>" class="text-muted" style="text-decoration: none;">
         <?= $model->createdBy->username ?>
     </a>
 </div>

@@ -51,14 +51,21 @@ public function actionLike($id)
     $like = \common\models\VideoLike::find()
         ->where(['video_id' => $id, 'user_id' => $userId])
         ->one();
-    if (!$like) {
-        $like = new \common\models\VideoLike();
-        $like->video_id = $id;
-        $like->user_id = $userId;
+
+    if ($like && $like->type == 1) {
+        // Unlike: remove the like
+        $like->delete();
+    } else {
+        // Like: create or update to type=1
+        if (!$like) {
+            $like = new \common\models\VideoLike();
+            $like->video_id = $id;
+            $like->user_id = $userId;
+        }
+        $like->type = 1;
+        $like->created_at = time();
+        $like->save(false);
     }
-    $like->type = 1;
-    $like->created_at = time();
-    $like->save(false);
 
     // Count likes and dislikes
     $likesCount = \common\models\VideoLike::find()->where(['video_id' => $id, 'type' => 1])->count();
@@ -93,14 +100,21 @@ public function actionDislike($id)
     $like = \common\models\VideoLike::find()
         ->where(['video_id' => $id, 'user_id' => $userId])
         ->one();
-    if (!$like) {
-        $like = new \common\models\VideoLike();
-        $like->video_id = $id;
-        $like->user_id = $userId;
+
+    if ($like && $like->type == 0) {
+        // Undislike: remove the dislike
+        $like->delete();
+    } else {
+        // Dislike: create or update to type=0
+        if (!$like) {
+            $like = new \common\models\VideoLike();
+            $like->video_id = $id;
+            $like->user_id = $userId;
+        }
+        $like->type = 0;
+        $like->created_at = time();
+        $like->save(false);
     }
-    $like->type = 0;
-    $like->created_at = time();
-    $like->save(false);
 
     // Count likes and dislikes
     $likesCount = \common\models\VideoLike::find()->where(['video_id' => $id, 'type' => 1])->count();

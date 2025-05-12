@@ -2,16 +2,34 @@
 namespace frontend\controllers;
 
 use yii\web\Controller;
+use yii\filters\AccessControl;
 use common\models\User;
 use common\models\Video;
+use common\models\Subscriber;
 use yii\data\ActiveDataProvider;
 use Yii;
 
 class ChannelController extends Controller
 {
-    public function actionUser($username)
+    public function behaviors(){
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['subscribe'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+
+    public function actionView($username)
     {
-        $user = User::find()->where(['username' => $username])->one();
+        $user = User::find()->where('LOWER(username) = :username AND status = 10', ['username' => strtolower($username)])->one();
         if (!$user) {
             throw new \yii\web\NotFoundHttpException('The requested channel does not exist.');
         }
@@ -23,9 +41,66 @@ class ChannelController extends Controller
             ],
         ]);
 
-        return $this->render('user', [
+        return $this->render('view', [
             'user' => $user,
             'dataProvider' => $dataProvider,
         ]);
+    }
+    public function actionSubscribe($username = null)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        try {
+            if (!Yii::$app->request->isPost) {
+                throw new \yii\web\MethodNotAllowedHttpException('Subscribe action only supports POST requests.');
+            }
+            $username = Yii::$app->request->post('username', $username);
+            $user = User::find()->where('LOWER(username) = :username', ['username' => strtolower($username)])->one();
+            if (!$user) {
+                return [
+                    'success' => false,
+                    'message' => 'The requested channel does not exist.',
+                ];
+            }
+            $subscriber = Subscriber::find()
+                ->where(['channel_id' => $user->id, 'user_id' => Yii::$app->user->id])
+                ->one();
+
+            if ($subscriber) {
+                // Unsubscribe
+                if (!$subscriber->delete()) {
+                    return [
+                        'success' => false,
+                        'message' => 'Failed to unsubscribe.',
+                    ];
+                }
+                $subscribed = false;
+            } else {
+                // Subscribe
+                $subscriber = new Subscriber();
+                $subscriber->channel_id = $user->id;
+                $subscriber->user_id = Yii::$app->user->id;
+                $subscriber->created_at = time();
+                if (!$subscriber->save()) {
+                    return [
+                        'success' => false,
+                        'message' => 'Failed to subscribe: ' . implode(', ', $subscriber->getFirstErrors()),
+                    ];
+                }
+                $subscribed = true;
+            }
+
+            $count = $user->getSubscriberCount();
+
+            return [
+                'success' => true,
+                'subscribed' => $subscribed,
+                'count' => $count,
+            ];
+        } catch (\Throwable $e) {
+            return [
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage(),
+            ];
+        }
     }
 }

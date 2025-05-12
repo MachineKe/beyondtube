@@ -210,4 +210,22 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+    /**
+     * Gets query for [[Subscribers]].
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSubscribers()
+    {
+        return $this->hasMany(\common\models\Subscriber::class, ['channel_id' => 'id']);
+    }
+
+    /**
+     * Returns the number of subscribers for this user/channel.
+     * @return int
+     */
+    public function getSubscriberCount()
+    {
+        return $this->getSubscribers()->count();
+    }
 }

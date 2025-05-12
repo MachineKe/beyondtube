@@ -18,7 +18,9 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'channel/<username:\w+>' => 'channel/user',
+                'channel/<username:[\w\-\.]+>' => 'channel/view',
+                'channel/subscribe/<username:[\w\-\.]+>' => 'channel/subscribe',
+                'channel/subscribe' => 'channel/subscribe',
                 // ... other rules ...
             ],
         ],

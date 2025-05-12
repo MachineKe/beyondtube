@@ -1,0 +1,29 @@
+# Ignore runtime and asset directories (auto-generated)
+runtime/
+assets/
+web/assets/
+
+# Ignore test output and data
+tests/_output/
+tests/_data/
+
+# Ignore logs and temp/cache files
+*.log
+*.pid
+*.sock
+*.tmp
+*.cache
+
+# Ignore environment and local config files
+.env
+.env.*
+*.env
+*.local
+
+# Ignore IDE/project files
+.idea
+.DS_Store
+nbproject
+.buildpath
+.project
+.settings

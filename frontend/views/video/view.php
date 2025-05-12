@@ -6,7 +6,7 @@ use yii\helpers\Url;
 ?>
 <div class="row">
     <div class="col-md-8">
-        <video class="img-fluid" style="max-width:100%;height:auto;" poster="<?= $model->getThumbnailLink() ?>" controls>
+        <video class="img-fluid" style="max-width:100%;height:auto;" poster="<?= $model->getThumbnailLink() ?>" controls autoplay>
             <source src="<?= $model->getVideoLink() ?>" type="video/mp4">
             Your browser does not support the video tag.
         </video>

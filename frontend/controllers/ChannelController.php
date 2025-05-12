@@ -87,6 +87,49 @@ class ChannelController extends Controller
                     ];
                 }
                 $subscribed = true;
+
+                // Send email to channel owner
+                try {
+                    $subscriberUser = Yii::$app->user->identity;
+                    Yii::$app->mailer->compose()
+                        ->setTo($user->email)
+                        ->setSubject('You have a new follower on BeyondTube')
+                        ->setTextBody(
+                            'Hello ' . $user->username . ",\n\n" .
+                            'You have a new follower on your channel: ' . $subscriberUser->username . "\n\n" .
+                            'Visit your channel to see more details.'
+                        )
+                        ->setHtmlBody(
+                            '<p>Hello ' . htmlspecialchars($user->username) . ',</p>' .
+                            '<p>You have a new follower on your channel: <strong>' . htmlspecialchars($subscriberUser->username) . '</strong></p>' .
+                            '<p>Visit your channel to see more details.</p>'
+                        )
+                        ->send();
+                } catch (\Throwable $mailEx) {
+                    Yii::error('Failed to send subscription email: ' . $mailEx->getMessage() . "\n" . $mailEx->getTraceAsString(), __METHOD__);
+                    // Fallback: try PHPMailer with SMTP
+                    try {
+                        require_once \Yii::getAlias('@vendor/phpmailer/phpmailer/src/PHPMailer.php');
+                        require_once \Yii::getAlias('@vendor/phpmailer/phpmailer/src/SMTP.php');
+                        require_once \Yii::getAlias('@vendor/phpmailer/phpmailer/src/Exception.php');
+                        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+                        $mail->isSMTP();
+                        $mail->Host = 'smtp.beyondsoftwares.com';
+                        $mail->SMTPAuth = true;
+                        $mail->Username = 'mail@beyondsoftwares.com';
+                        $mail->Password = 'MambetNumber1';
+                        $mail->SMTPSecure = 'tls';
+                        $mail->Port = 587;
+                        $mail->setFrom('mail@beyondsoftwares.com', 'BeyondTube');
+                        $mail->addAddress($user->email, $user->username);
+                        $mail->Subject = 'You have a new follower on BeyondTube';
+                        $mail->Body = "Hello {$user->username},\n\nYou have a new follower on your channel: {$subscriberUser->username}\n\nVisit your channel to see more details.";
+                        $mail->AltBody = $mail->Body;
+                        $mail->send();
+                    } catch (\Throwable $phpMailerEx) {
+                        Yii::error('PHPMailer SMTP fallback failed: ' . $phpMailerEx->getMessage(), __METHOD__);
+                    }
+                }
             }
 
             $count = $user->getSubscriberCount();

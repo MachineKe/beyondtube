@@ -131,6 +131,28 @@ const STATUS_PUBLISHED = 1;
     }
 
     /**
+     * Gets query for [[Views]].
+     *
+     * @return \yii\db\ActiveQuery|VideoViewQuery
+     */
+    public function getViews()
+    {
+        return $this->hasMany(VideoView::class, ['video_id' => 'video_id']);
+    }
+
+    public function getLikes()
+    {
+        return $this->hasMany(\common\models\VideoLike::class, ['video_id' => 'video_id'])
+            ->andWhere(['type' => 1]);
+    }
+
+    public function getDislikes()
+    {
+        return $this->hasMany(\common\models\VideoLike::class, ['video_id' => 'video_id'])
+            ->andWhere(['type' => 0]);
+    }
+
+    /**
      * {@inheritdoc}
      * @return VideoQuery the active query used by this AR class.
      */

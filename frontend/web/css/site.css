@@ -43,3 +43,7 @@ aside .nav-pills .nav-link.active {
     height: 100%;
     opacity: 0;
 }
+
+.content-wrapper{
+    margin-bottom: 200px;
+}

@@ -49,3 +49,39 @@ phpunit.phar
 /*.mov
 /*.mkv
 /*.webm
+
+# Ignore asset and runtime directories (auto-generated)
+/frontend/web/assets/
+/frontend/runtime/
+/backend/web/assets/
+/backend/runtime/
+/console/runtime/
+
+/frontend/assets/
+/backend/assets/
+/console/assets/
+
+/frontend/tests/_output/
+/frontend/tests/_data/
+/backend/tests/_output/
+/backend/tests/_data/
+/common/tests/_output/
+/common/tests/_data/
+
+/node_modules/
+/bower_components/
+
+/*.log
+*.log
+
+# Ignore Docker build artifacts
+*.pid
+*.sock
+*.tmp
+*.cache
+
+# Ignore environment and local config files
+.env
+.env.*
+/*.env
+*.local

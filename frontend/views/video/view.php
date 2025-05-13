@@ -19,9 +19,13 @@ use yii\helpers\Url;
                <?php echo $this->render('_buttons', ['model' => $model]) ?>
             </div>
 <div class="text-muted mb-0">
-    <a href="<?= Url::to(['/channel/' . $model->createdBy->username]) ?>" class="text-muted" style="text-decoration: none;">
-        <?= $model->createdBy->username ?>
-    </a>
+    <?php if ($model->createdBy): ?>
+        <a href="<?= Url::to(['/channel/' . $model->createdBy->username]) ?>" class="text-muted" style="text-decoration: none;">
+            <?= $model->createdBy->username ?>
+        </a>
+    <?php else: ?>
+        unknown
+    <?php endif; ?>
 </div>
         </div>
     </div>

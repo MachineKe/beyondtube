@@ -8,8 +8,13 @@ if (!isset($showUsername)) {
 }
 ?>
 
+<?php
+if (!isset($cardWidth)) {
+    $cardWidth = '14rem';
+}
+?>
 <a href="<?= Url::toRoute(['video/view', 'id' => $model->video_id]) ?>" style="color: #111; text-decoration: none;">
-<div class="card mb-3" style="width: 100%; max-width: 100%;">
+<div class="card mb-3" style="width: <?= $cardWidth ?>; max-width: 100%;">
     <img src="<?= $model->getThumbnailLink() ?>" alt="Thumbnail" class="img-fluid" style="width: 100%; height: 120px; object-fit: cover; border-radius: 4px; margin-top: 8px;">
     <h6 class="card-title m-0" style="padding: 8px 0 0 0;"><?= $model->title ?></h6>
     <div class="card-body p-2">

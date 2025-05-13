@@ -191,4 +191,36 @@ public function actionViewLike($id){
             'videos' => $videos,
         ]);
     }
+
+    /**
+     * Show recently viewed videos by the user.
+     */
+    public function actionHistory()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+        $userId = Yii::$app->user->id;
+        // Get the most recent views, grouped by video, most recent first
+        $videoViews = \common\models\VideoView::find()
+            ->where(['user_id' => $userId])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->groupBy('video_id')
+            ->limit(30)
+            ->all();
+
+        // Get the videos in the order of viewing
+        $videos = [];
+        foreach ($videoViews as $view) {
+            $video = \common\models\Video::findOne(['video_id' => $view->video_id]);
+            if ($video) {
+                $videos[] = $video;
+            }
+        }
+
+        return $this->render('history', [
+            'videos' => $videos,
+            'views' => $videoViews,
+        ]);
+    }
 }

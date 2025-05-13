@@ -225,8 +225,8 @@ const STATUS_PUBLISHED = 1;
         if (!is_dir(dirname($thumbnailPath))) {
             FileHelper::createDirectory(dirname($thumbnailPath));
         }
-        // Extract a frame at 2 seconds as the thumbnail
-        $cmd = "\"{$ffmpeg}\" -ss 00:00:02 -i \"{$videoPath}\" -frames:v 1 -vf \"scale=320:180\" \"{$thumbnailPath}\"";
+        // Extract a frame at 2 seconds as the thumbnail, best quality, HD size
+        $cmd = "\"{$ffmpeg}\" -ss 00:00:02 -i \"{$videoPath}\" -frames:v 1 -vf \"scale=1280:-1\" -q:v 1 \"{$thumbnailPath}\"";
         exec($cmd, $output, $returnVar);
         return file_exists($thumbnailPath) && $returnVar === 0;
     }

@@ -6,7 +6,7 @@ use yii\helpers\Url;
 ?>
 <div class="row">
     <div class="col-md-8">
-        <video class="img-fluid" style="max-width:100%;height:auto;" poster="<?= $model->getThumbnailLink() ?>" controls autoplay>
+        <video class="img-fluid" style="width:100%;height:auto;min-height:360px;max-width:100%;" poster="<?= $model->getThumbnailLink() ?>" controls autoplay>
             <source src="<?= $model->getVideoLink() ?>" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -27,7 +27,13 @@ use yii\helpers\Url;
     </div>
     <div class="col-md-4">
         <h6>Similar Videos</h6>
-        <!-- TODO: List similar videos here -->
+        <?php if (!empty($similarVideos)): ?>
+            <?php foreach ($similarVideos as $similar): ?>
+                <?= $this->render('_video_item', ['model' => $similar, 'showUsername' => true]) ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="text-muted">No similar videos found.</div>
+        <?php endif; ?>
     </div>
 </div>
 

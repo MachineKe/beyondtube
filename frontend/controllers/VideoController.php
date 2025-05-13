@@ -147,13 +147,22 @@ public function actionDislike($id)
             throw new \yii\web\NotFoundHttpException('The requested page does not exist.');
         }
 
+        // Fetch similar videos: latest published, excluding current video
+        $similarVideos = Video::find()
+            ->where(['status' => Video::STATUS_PUBLISHED])
+            ->andWhere(['<>', 'video_id', $id])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->limit(10)
+            ->all();
+
         $videoView = new VideoView();
         $videoView->video_id = $video->video_id;
         $videoView->user_id = Yii::$app->user->id;
         $videoView->created_at = time();
         $videoView->save();
         return $this->render('view', [
-            'model' => $video
+            'model' => $video,
+            'similarVideos' => $similarVideos,
         ]);
     }
 public function actionViewLike($id){

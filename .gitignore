@@ -19,6 +19,8 @@ Thumbs.db
 
 # composer vendor dir
 /vendor
+# ffmpeg and binaries
+/bin/
 
 # composer itself is not needed
 composer.phar

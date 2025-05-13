@@ -8,13 +8,15 @@
         ],
         'items' => [
             [
-                'label' => 'Dashboard',
+                'label' => '<i class="fa fa-home me-2"></i>Dashboard',
                 'url' => ['/site/index'],
-                'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index'
+                'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index',
+                'encode' => false
             ],
             [
-                'label' => 'Videos',
-                'url' => ['/video/index']
+                'label' => '<i class="fa fa-video me-2"></i>Videos',
+                'url' => ['/video/index'],
+                'encode' => false
             ]
         ]
     ]);

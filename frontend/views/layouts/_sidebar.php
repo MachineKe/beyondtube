@@ -8,13 +8,21 @@
         ],
         'items' => [
             [
-                'label' => 'Home',
+                'label' => '<i class="fa fa-home me-2"></i>Home',
                 'url' => ['/video/index'],
-                'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index'
+                'active' => Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'index',
+                'encode' => false
             ],
             [
-                'label' => 'History',
-                'url' => ['/video/history']
+                'label' => '<i class="fa fa-history me-2"></i>History',
+                'url' => ['/video/history'],
+                'encode' => false
+            ],
+            [
+                'label' => '<i class="fa fa-cog me-2"></i>Studio',
+                'url' => Yii::$app->params['backendUrl'] ?? 'http://studio.beyondtube.test',
+                'encode' => false,
+                'linkOptions' => ['target' => '_blank']
             ]
         ]
     ]);

@@ -5,6 +5,7 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use yii\helpers\Url;
 
 /**
  * Signup form
@@ -66,11 +67,12 @@ class SignupForm extends Model
      */
     protected function sendEmail($user)
     {
+        $verifyLink = Url::to(['site/verify-email', 'token' => $user->verification_token], true);
         return Yii::$app
             ->mailer
             ->compose(
                 ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
+                ['user' => $user, 'verifyLink' => $verifyLink]
             )
             ->setFrom([$_ENV['SMTP_FROM_EMAIL'] ?? 'mail@beyondsoftwares.com' => $_ENV['SMTP_FROM_NAME'] ?? (Yii::$app->name . ' robot')])
             ->setTo($this->email)

@@ -55,9 +55,9 @@ return [
             'class' => \yii\symfonymailer\Mailer::class,
             'viewPath' => '@common/mail',
             'useFileTransport' => false,
-'transport' => [
-    'dsn' => 'smtp://mail%40beyondsoftwares.com:MambetNumber1@mail.beyondsoftwares.com:587'
-],
+            'transport' => [
+                'dsn' => 'smtp://mail%40beyondsoftwares.com:MambetNumber1@mail.beyondsoftwares.com:587'
+            ],
             'messageConfig' => [
                 'from' => [$_ENV['SMTP_FROM_EMAIL'] ?? 'mail@beyondsoftwares.com' => $_ENV['SMTP_FROM_NAME'] ?? 'BeyondTube'],
             ],

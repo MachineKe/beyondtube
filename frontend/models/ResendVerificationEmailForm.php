@@ -47,13 +47,16 @@ class ResendVerificationEmailForm extends Model
             return false;
         }
 
+        $frontendUrl = Yii::$app->params['frontendUrl'] ?? 'http://localhost';
+        $verifyLink = rtrim($frontendUrl, '/') . '/site/verify-email?token=' . urlencode($user->verification_token);
+
         return Yii::$app
             ->mailer
             ->compose(
                 ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
+                ['user' => $user, 'verifyLink' => $verifyLink]
             )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
+            ->setFrom([$_ENV['SMTP_FROM_EMAIL'] ?? 'mail@beyondsoftwares.com' => $_ENV['SMTP_FROM_NAME'] ?? (Yii::$app->name . ' robot')])
             ->setTo($this->email)
             ->setSubject('Account registration at ' . Yii::$app->name)
             ->send();

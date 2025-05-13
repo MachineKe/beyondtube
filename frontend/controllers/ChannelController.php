@@ -91,19 +91,15 @@ class ChannelController extends Controller
                 // Send email to channel owner
                 try {
                     $subscriberUser = Yii::$app->user->identity;
-                    Yii::$app->mailer->compose()
+                    Yii::$app->mailer->compose(
+                        ['html' => 'subscription-html'],
+                        [
+                            'user' => $user,
+                            'subscriberUser' => $subscriberUser,
+                        ]
+                    )
                         ->setTo($user->email)
                         ->setSubject('You have a new follower on BeyondTube')
-                        ->setTextBody(
-                            'Hello ' . $user->username . ",\n\n" .
-                            'You have a new follower on your channel: ' . $subscriberUser->username . "\n\n" .
-                            'Visit your channel to see more details.'
-                        )
-                        ->setHtmlBody(
-                            '<p>Hello ' . htmlspecialchars($user->username) . ',</p>' .
-                            '<p>You have a new follower on your channel: <strong>' . htmlspecialchars($subscriberUser->username) . '</strong></p>' .
-                            '<p>Visit your channel to see more details.</p>'
-                        )
                         ->send();
                 } catch (\Throwable $mailEx) {
                     Yii::error('Failed to send subscription email: ' . $mailEx->getMessage() . "\n" . $mailEx->getTraceAsString(), __METHOD__);
@@ -123,9 +119,13 @@ class ChannelController extends Controller
                         $mail->setFrom('mail@beyondsoftwares.com', 'BeyondTube');
                         $mail->addAddress($user->email, $user->username);
                         $mail->Subject = 'You have a new follower on BeyondTube';
-                        $mail->Body = "Hello {$user->username},\n\nYou have a new follower on your channel: {$subscriberUser->username}\n\nVisit your channel to see more details.";
-                        $mail->AltBody = $mail->Body;
-                        $mail->send();
+$mail->isHTML(true);
+$subscriberChannelUrl = Yii::$app->urlManager->createAbsoluteUrl(['/channel/view', 'username' => $subscriberUser->username]);
+$mail->Body = 'Hello ' . htmlspecialchars($user->username) . ',<br><br>' .
+    'You have a new follower on your channel: <a href="' . $subscriberChannelUrl . '">' . htmlspecialchars($subscriberUser->username) . '</a><br><br>' .
+    'Visit your channel to see more details.';
+$mail->AltBody = "Hello {$user->username},\n\nYou have a new follower on your channel: {$subscriberUser->username} ({$subscriberChannelUrl})\n\nVisit your channel to see more details.";
+$mail->send();
                     } catch (\Throwable $phpMailerEx) {
                         Yii::error('PHPMailer SMTP fallback failed: ' . $phpMailerEx->getMessage(), __METHOD__);
                     }

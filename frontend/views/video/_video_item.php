@@ -19,9 +19,13 @@ if (!isset($showUsername)) {
 <div class="card-body p-2">
     <?php if ($showUsername): ?>
     <p class="text-muted card-text m-0">
-        <a href="<?= Url::to(['/channel/' . $model->createdBy->username]) ?>" class="text-muted" style="text-decoration: none;">
-            <?= $model->createdBy->username ?>
-        </a>
+        <?php if ($model->createdBy): ?>
+            <a href="<?= Url::to(['/channel/' . $model->createdBy->username]) ?>" class="text-muted" style="text-decoration: none;">
+                <?= $model->createdBy->username ?>
+            </a>
+        <?php else: ?>
+            unknown
+        <?php endif; ?>
     </p>
     <?php endif; ?>
     <p class="text-muted card-text m-0"><?= $model->getViews()->count() ?> views . <?= Yii::$app->formatter->asRelativeTime($model->created_at) ?></p>

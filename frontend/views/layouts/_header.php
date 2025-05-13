@@ -15,7 +15,21 @@ $menuItems = [
             'class' => 'navbar navbar-expand-md navbar-light bg-light fixed-top',
         ],
     ]);
-      
+
+    // Search bar form
+    echo Html::beginForm(['/video/search'], 'get', ['class' => 'd-flex ms-3', 'style' => 'width:400px;']);
+    echo Html::textInput('keyword', Yii::$app->request->get('keyword'), [
+        'class' => 'form-control me-2',
+        'placeholder' => 'Search',
+        'aria-label' => 'Search',
+        'style' => 'font-size:1.25rem;'
+    ]);
+    echo Html::submitButton('Search', [
+        'class' => 'btn btn-outline-success',
+        'style' => 'font-size:1.25rem;'
+    ]);
+    echo Html::endForm();
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav ms-auto mb-2 mb-md-0'],
         'items' => $menuItems,

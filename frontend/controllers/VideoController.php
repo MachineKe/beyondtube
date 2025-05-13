@@ -164,5 +164,22 @@ public function actionViewLike($id){
         $videoLike->type = 1;
         $videoLike->save();
     }
-    
+
+    /**
+     * Search videos by keyword.
+     */
+    public function actionSearch()
+    {
+        $keyword = Yii::$app->request->get('keyword', '');
+        $videos = [];
+        if ($keyword !== '') {
+            $videos = Video::find()
+                ->where(['like', 'title', $keyword])
+                ->all();
+        }
+        return $this->render('search', [
+            'keyword' => $keyword,
+            'videos' => $videos,
+        ]);
+    }
 }

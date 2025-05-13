@@ -256,4 +256,22 @@ class SiteController extends Controller
             'model' => $model
         ]);
     }
+
+    /**
+     * Search videos by title.
+     */
+    public function actionSearch()
+    {
+        $q = Yii::$app->request->get('q', '');
+        $videos = [];
+        if ($q !== '') {
+            $videos = \common\models\Video::find()
+                ->where(['like', 'title', $q])
+                ->all();
+        }
+        return $this->render('search', [
+            'q' => $q,
+            'videos' => $videos,
+        ]);
+    }
 }

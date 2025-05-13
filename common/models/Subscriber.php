@@ -11,6 +11,14 @@ use Yii;
  */
 class Subscriber extends \yii\db\ActiveRecord
 {
+    /**
+     * Gets the user who subscribed.
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(\common\models\User::class, ['id' => 'user_id']);
+    }
 
 
     /**

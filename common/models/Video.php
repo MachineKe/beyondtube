@@ -196,8 +196,39 @@ const STATUS_PUBLISHED = 1;
             $this->thumbnail->saveAs($thumbnailPath);
             // resize with yii2 imagine
             \yii\imagine\Image::getImagine()->open($thumbnailPath)->thumbnail(new \Imagine\Image\Box(1280, 1280))->save($thumbnailPath);
+        } else {
+            // Auto-generate thumbnail from video if not provided
+            $videoPath = Yii::getAlias('@frontend/web/storage/videos/') . $this->video_id . '.mp4';
+            $thumbnailPath = Yii::getAlias('@frontend/web/storage/thumbs/') . $this->video_id . '.png';
+            if (file_exists($videoPath) && !file_exists($thumbnailPath)) {
+                if ($this->generateThumbnailFromVideo($videoPath, $thumbnailPath)) {
+                    $this->has_thumbnail = 1;
+                    parent::save(false, ['has_thumbnail']);
+                }
+            }
         }
         return true;
+    }
+
+    /**
+     * Generates a thumbnail from the video file using ffmpeg.
+     * @param string $videoPath
+     * @param string $thumbnailPath
+     * @return bool
+     */
+    public function generateThumbnailFromVideo($videoPath, $thumbnailPath)
+    {
+        $ffmpeg = realpath(Yii::getAlias('@app/../bin/ffmpeg.exe'));
+        if (!$ffmpeg || !file_exists($ffmpeg)) {
+            return false;
+        }
+        if (!is_dir(dirname($thumbnailPath))) {
+            FileHelper::createDirectory(dirname($thumbnailPath));
+        }
+        // Extract a frame at 2 seconds as the thumbnail
+        $cmd = "\"{$ffmpeg}\" -ss 00:00:02 -i \"{$videoPath}\" -frames:v 1 -vf \"scale=320:180\" \"{$thumbnailPath}\"";
+        exec($cmd, $output, $returnVar);
+        return file_exists($thumbnailPath) && $returnVar === 0;
     }
     public function getVideoLink(){
         return Yii::$app->params['frontendUrl'].'/storage/videos/'.$this->video_id .'.mp4';

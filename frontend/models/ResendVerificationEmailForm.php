@@ -47,7 +47,7 @@ class ResendVerificationEmailForm extends Model
             return false;
         }
 
-        $frontendUrl = Yii::$app->params['frontendUrl'] ?? 'http://localhost';
+        $frontendUrl = Yii::$app->params['frontendUrl'];
         $verifyLink = rtrim($frontendUrl, '/') . '/site/verify-email?token=' . urlencode($user->verification_token);
 
         return Yii::$app

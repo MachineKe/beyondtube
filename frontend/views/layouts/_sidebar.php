@@ -20,7 +20,7 @@
             ],
             [
                 'label' => '<i class="fa fa-cog me-2"></i>Studio',
-                'url' => Yii::$app->params['backendUrl'] ?? 'http://studio.beyondtube.test',
+                'url' => Yii::$app->params['backendUrl'],
                 'encode' => false,
                 'linkOptions' => ['target' => '_blank']
             ]

@@ -84,9 +84,14 @@ class VideoController extends Controller
             if ($model->load(Yii::$app->request->post())) {
                 $model->video = UploadedFile::getInstance($model, 'video');
                 $model->thumbnail = UploadedFile::getInstance($model, 'thumbnail');
-                if ($model->save()) {
-                    return $this->redirect(['update', 'video_id' => $model->video_id]);
-                }
+if ($model->save()) {
+    $redirectUrl = \yii\helpers\Url::to(['update', 'video_id' => $model->video_id]);
+    if (Yii::$app->request->isAjax) {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return ['success' => true, 'redirect' => $redirectUrl];
+    }
+    return $this->redirect(['update', 'video_id' => $model->video_id]);
+}
             }
         } else {
             $model->loadDefaultValues();

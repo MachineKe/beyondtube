@@ -4,8 +4,7 @@ use yii\bootstrap5\Nav;
 use yii\bootstrap5\Html;
 
 $menuItems = [
-    ['label' => 'Home', 'url' => ['/site/index']],
-    ['label' => 'History', 'url' => ['/video/history']],
+    // Home and History removed
 ];
 
     NavBar::begin([

@@ -84,6 +84,30 @@ Access at: [http://localhost:8081/](http://localhost:8081/)
 
 ---
 
+## Environment Variables
+
+The application requires the following environment variables to be set (see the provided `.env` file for examples):
+
+### SMTP (Email) Configuration
+
+- `SMTP_HOST` - SMTP server hostname
+- `SMTP_PORT` - SMTP server port (e.g. 587)
+- `SMTP_USER` - SMTP username (used by frontend config/controllers)
+- `SMTP_PASS` - SMTP password (used by frontend config/controllers)
+- `SMTP_FROM_EMAIL` - Default "from" email address for outgoing mail
+- `SMTP_FROM_NAME` - Default "from" name for outgoing mail
+
+### Database Connection (for backend/web/test-db.php)
+
+- `DB_HOST` - Database server hostname
+- `DB_NAME` - Database name
+- `DB_USER` - Database username
+- `DB_PASS` - Database password
+
+All sensitive credentials should be set in your `.env` file in the project root. The application will read these variables at runtime for secure configuration.
+
+---
+
 ## Optional: Setting up a Virtual Host (Apache Example)
 
 For a more realistic development environment, you can set up Apache virtual hosts to serve the frontend and backend as separate subdomains or paths.

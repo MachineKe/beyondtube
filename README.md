@@ -61,11 +61,19 @@ return [
 
 ### 4. Set up web server or run locally
 
-- For local development, you can use the built-in PHP server:
+- For local development, you can use the built-in PHP server to run both the frontend and backend applications in separate terminals:
 
+**Frontend:**
 ```bash
-php yii serve --port=8080
+php yii serve --port=8080 --docroot=frontend/web
 ```
+Access at: [http://localhost:8080/](http://localhost:8080/)
+
+**Backend:**
+```bash
+php yii serve --port=8081 --docroot=backend/web
+```
+Access at: [http://localhost:8081/](http://localhost:8081/)
 
 - Or configure Apache/Nginx to point the web root to `frontend/web` and `backend/web` for the respective applications.
 

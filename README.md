@@ -86,7 +86,7 @@ Access at: [http://localhost:8081/](http://localhost:8081/)
 
 ## Environment Variables
 
-The application requires the following environment variables to be set (see the provided `.env` file for examples):
+The application requires the following environment variables to be set (see the provided `example.env` file for examples):
 
 ### SMTP (Email) Configuration
 

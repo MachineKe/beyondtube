@@ -1,0 +1,12 @@
+RewriteEngine on
+
+# Prevent directory listing
+Options -Indexes
+
+# If the requested file or directory exists in public_html, serve it directly
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Otherwise, forward all requests to frontend/web/index.php
+RewriteRule ^(.*)$ ../beyondtube/frontend/web/index.php [L]

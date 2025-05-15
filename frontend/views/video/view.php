@@ -58,11 +58,19 @@ $('#like-btn, #dislike-btn').on('click', function(e) {
                 $('#like-count').text(data.likes);
                 $('#dislike-count').text(data.dislikes);
             } else if (data.error) {
-                alert(data.error);
+                if (data.error === 'Login required') {
+                    window.location.href = '/site/login';
+                } else {
+                    alert(data.error);
+                }
             }
         },
-        error: function() {
-            alert('An error occurred. Please try again.');
+        error: function(xhr) {
+            if (xhr.status === 403) {
+                window.location.href = '/site/login';
+            } else {
+                alert('An error occurred. Please try again.');
+            }
         }
     });
 });

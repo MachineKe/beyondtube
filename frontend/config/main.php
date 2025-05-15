@@ -8,6 +8,10 @@ $params = array_merge(
 
 return [
     'id' => 'app-frontend',
+    'aliases' => [
+        '@web' => getenv('YII_WEB_ALIAS') ?: '/frontend/web',
+        '@webroot' => getenv('YII_WEBROOT_ALIAS') ?: dirname(__DIR__) . '/web',
+    ],
     'name' => 'BeyondTube',
     'defaultRoute' => '/video/index',
     'basePath' => dirname(__DIR__),

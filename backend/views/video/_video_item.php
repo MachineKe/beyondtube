@@ -15,7 +15,7 @@ use yii\helpers\Url;
     </div>
     <div>
         <div style="font-weight: bold; font-size: 1.15em;"><?= Html::encode($model->title) ?></div>
-        <div style="color: #555; font-size: 1em;"><?= StringHelper::truncateWords($model->description, 10) ?></div>
+        <div style="color: #555; font-size: 1em;"><?= StringHelper::truncateWords($model->description ?? '', 10) ?></div>
     </div>
 </div>
 </a>

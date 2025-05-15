@@ -49,6 +49,14 @@ return [
 php yii migrate
 ```
 
+Alternatively, you can run migrations using your web browser. Simply use your frontend URL and visit the `migrate.php` route. For example:
+
+```
+frontendUrl/migrate.php
+```
+
+This will execute the migrations through a web interface, which can be useful if you do not have command-line access.
+
 ```php
 return [
     'class' => 'yii\db\Connection',

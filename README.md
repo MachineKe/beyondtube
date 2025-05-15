@@ -31,17 +31,7 @@ composer install
 
 ### 3. Set up the database
 
-- Configure your database connection in `common/config/db.php`:
-
-```php
-return [
-    'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=beyondtube',
-    'username' => 'your_db_user',
-    'password' => 'your_db_password',
-    'charset' => 'utf8',
-];
-```
+- Ensure your environment variables for the database connection are set (`DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`) before running migrations.
 
 - Run the Yii2 migrations to create all required tables:
 
@@ -55,17 +45,7 @@ Alternatively, you can run migrations using your web browser. Simply use your fr
 frontendUrl/migrate.php
 ```
 
-This will execute the migrations through a web interface, which can be useful if you do not have command-line access.
-
-```php
-return [
-    'class' => 'yii\db\Connection',
-    'dsn' => 'mysql:host=localhost;dbname=beyondtube',
-    'username' => 'your_db_user',
-    'password' => 'your_db_password',
-    'charset' => 'utf8',
-];
-```
+This will execute the migrations through a web interface, which can be useful if you do not have command-line access. Make sure your environment variables are set before using this method as well.
 
 ### 4. Set up web server or run locally
 
@@ -110,7 +90,7 @@ The application requires the following environment variables to be set (see the 
 - `DB_HOST` - Database server hostname
 - `DB_NAME` - Database name
 - `DB_USER` - Database username
-- `DB_PASS` - Database password
+- `DB_PASSWORD` - Database password
 
 All sensitive credentials should be set in your `.env` file in the project root. The application will read these variables at runtime for secure configuration.
 

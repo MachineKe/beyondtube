@@ -1,25 +1,128 @@
-<p align="center">
-    <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
-    </a>
-    <h1 align="center">Yii 2 Advanced Project Template</h1>
-    <br>
-</p>
+# BeyondTube
 
-Yii 2 Advanced Project Template is a skeleton [Yii 2](https://www.yiiframework.com/) application best for
-developing complex Web applications with multiple tiers.
+BeyondTube is a full-featured video sharing platform inspired by YouTube, built with PHP and Yii2. It allows users to upload, view, like, and comment on videos, manage channels, and interact with content in a modern, multi-tier web application.
 
-The template includes three tiers: front end, back end, and console, each of which
-is a separate Yii application.
+## Key Features
 
-The template is designed to work in a team development environment. It supports
-deploying the application in different environments.
+- User registration, authentication, and channel management
+- Video upload, playback, and thumbnail generation
+- Like/dislike system with AJAX support
+- Commenting and video view tracking
+- Admin backend for managing videos and users
+- Responsive frontend for a seamless user experience
+- Database migrations and easy local setup
 
-Documentation is at [docs/guide/README.md](docs/guide/README.md).
+## Getting Started
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/yiisoft/yii2-app-advanced.svg)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![Total Downloads](https://img.shields.io/packagist/dt/yiisoft/yii2-app-advanced.svg)](https://packagist.org/packages/yiisoft/yii2-app-advanced)
-[![build](https://github.com/yiisoft/yii2-app-advanced/workflows/build/badge.svg)](https://github.com/yiisoft/yii2-app-advanced/actions?query=workflow%3Abuild)
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/MachineKe/beyondtube.git
+cd beyondtube
+```
+
+### 2. Install PHP dependencies
+
+Make sure you have [Composer](https://getcomposer.org/) installed.
+
+```bash
+composer install
+```
+
+### 3. Set up the database
+
+- Configure your database connection in `common/config/db.php`:
+
+```php
+return [
+    'class' => 'yii\db\Connection',
+    'dsn' => 'mysql:host=localhost;dbname=beyondtube',
+    'username' => 'your_db_user',
+    'password' => 'your_db_password',
+    'charset' => 'utf8',
+];
+```
+
+- Run the Yii2 migrations to create all required tables:
+
+```bash
+php yii migrate
+```
+
+```php
+return [
+    'class' => 'yii\db\Connection',
+    'dsn' => 'mysql:host=localhost;dbname=beyondtube',
+    'username' => 'your_db_user',
+    'password' => 'your_db_password',
+    'charset' => 'utf8',
+];
+```
+
+### 4. Set up web server or run locally
+
+- For local development, you can use the built-in PHP server:
+
+```bash
+php yii serve --port=8080
+```
+
+- Or configure Apache/Nginx to point the web root to `frontend/web` and `backend/web` for the respective applications.
+
+### 5. Access the application
+
+- Frontend: [http://localhost:8080/](http://localhost:8080/) (if using `php yii serve`)
+- Backend: Configure your web server to point to `backend/web` and access via browser.
+
+---
+
+## Optional: Setting up a Virtual Host (Apache Example)
+
+For a more realistic development environment, you can set up Apache virtual hosts to serve the frontend and backend as separate subdomains or paths.
+
+### Example Apache Configuration
+
+Add the following to your Apache `httpd-vhosts.conf` (adjust paths as needed):
+
+```apache
+<VirtualHost *:80>
+    ServerName beyondtube.test
+    DocumentRoot "<path-to-project>/frontend/web"
+    <Directory "<path-to-project>/frontend/web">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+<VirtualHost *:80>
+    ServerName studio.beyondtube.test
+    DocumentRoot "<path-to-project>/backend/web"
+    <Directory "<path-to-project>/backend/web">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+### Update your hosts file
+
+Add these lines to your system's `hosts` file:
+
+```
+127.0.0.1 beyondtube.test
+127.0.0.1 studio.beyondtube.test
+```
+
+- On Windows: `C:\Windows\System32\drivers\etc\hosts`
+- On Linux/Mac: `/etc/hosts`
+
+### Restart Apache
+
+After updating the configuration and hosts file, restart Apache. You can now access:
+- Frontend: [http://beyondtube.test/](http://beyondtube.test/)
+- Backend: [http://studio.beyondtube.test/](http://studio.beyondtube.test/)
+
+---
 
 DIRECTORY STRUCTURE
 -------------------

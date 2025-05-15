@@ -60,10 +60,10 @@ return [
             'viewPath' => '@common/mail',
             'useFileTransport' => false,
             'transport' => [
-                'dsn' => 'smtp://mail%40beyondsoftwares.com:MambetNumber1@mail.beyondsoftwares.com:587'
+                'dsn' => 'smtp://' . $_ENV['SMTP_USER'] . ':' . $_ENV['SMTP_PASS'] . '@' . $_ENV['SMTP_HOST'] . ':' . $_ENV['SMTP_PORT']
             ],
             'messageConfig' => [
-                'from' => [$_ENV['SMTP_FROM_EMAIL'] ?? 'mail@beyondsoftwares.com' => $_ENV['SMTP_FROM_NAME'] ?? 'BeyondTube'],
+                'from' => [$_ENV['SMTP_FROM_EMAIL'] => $_ENV['SMTP_FROM_NAME']],
             ],
         ],
     ],

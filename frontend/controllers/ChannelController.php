@@ -110,13 +110,13 @@ class ChannelController extends Controller
                         require_once \Yii::getAlias('@vendor/phpmailer/phpmailer/src/Exception.php');
                         $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
                         $mail->isSMTP();
-                        $mail->Host = 'smtp.beyondsoftwares.com';
+                        $mail->Host = $_ENV['SMTP_HOST'] ?? 'smtp.beyondsoftwares.com';
                         $mail->SMTPAuth = true;
-                        $mail->Username = 'mail@beyondsoftwares.com';
-                        $mail->Password = 'MambetNumber1';
+                        $mail->Username = $_ENV['SMTP_USER'] ;
+                        $mail->Password = $_ENV['SMTP_PASS'];
                         $mail->SMTPSecure = 'tls';
-                        $mail->Port = 587;
-                        $mail->setFrom('mail@beyondsoftwares.com', 'BeyondTube');
+                        $mail->Port = $_ENV['SMTP_PORT'];
+                        $mail->setFrom($_ENV['SMTP_FROM_EMAIL'] , $_ENV['SMTP_FROM_NAME']);
                         $mail->addAddress($user->email, $user->username);
                         $mail->Subject = 'You have a new follower on BeyondTube';
 $mail->isHTML(true);

@@ -7,7 +7,7 @@ BeyondTube is a full-featured video sharing platform inspired by YouTube, built 
 - User registration, authentication, and channel management
 - Video upload, playback, and thumbnail generation
 - Like/dislike system with AJAX support
-- Commenting and video view tracking
+- Video view tracking
 - Admin backend for managing videos and users
 - Responsive frontend for a seamless user experience
 - Database migrations and easy local setup

@@ -92,7 +92,14 @@ The application requires the following environment variables to be set (see the 
 - `DB_USER` - Database username
 - `DB_PASSWORD` - Database password
 
-All sensitive credentials should be set in your `.env` file in the project root. The application will read these variables at runtime for secure configuration.
+### Application URLs
+
+- `FRONTEND_URL` - The base URL for the frontend application (e.g. `http://beyondtube.test`). Used in `common/config/params.php` and `backend/config/params.php` to generate links and references to the frontend from the backend or shared code.
+- `BACKEND_URL` - The base URL for the backend application (e.g. `http://studio.beyondtube.test`). Used in `common/config/params.php` to generate links and references to the backend from the frontend or shared code.
+
+These variables allow you to configure how the frontend and backend reference each other, which is especially useful when running in different environments (local, staging, production) or when using custom domains. Set these in your `.env` file to match your local or production setup.
+
+All sensitive credentials and URLs should be set in your `.env` file in the project root. The application will read these variables at runtime for secure configuration.
 
 ---
 
